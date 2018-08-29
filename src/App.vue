@@ -5,13 +5,18 @@
   </div>
 </template>
 <script>
+  import {mapActions} from 'vuex'
   import Footer from './components/Footer/Footer.vue'
   export default {
     components: {
       Footer
     },
     mounted () {
-      this.$store.dispatch('getAddress')
+      this.getAddress()
+      this.getUserInfo()
+    },
+    methods: {
+      ...mapActions(['getAddress','getUserInfo'])
     }
   }
 </script>

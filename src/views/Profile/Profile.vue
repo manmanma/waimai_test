@@ -2,13 +2,15 @@
   <section>
     <!--头部导航-->
     <HeaderTop title="我的"/>
-    <router-link to="/login">
+    <router-link :to="userInfo._id ? '/userinfo': '/login' ">
       <div class="user_info border_px">
           <div class="user_icon">
             <i class="iconfont icon-person"></i>
           </div>
           <div class="user_login_mobile loginClick" >
-            <p><a href="javascript:;">登录/注册</a></p>
+            <p v-if="!userInfo.phone"><a href="javascript:;">
+              {{userInfo.name || '登录/注册'}}
+            </a></p>
             <p><i class="iconfont icon-shouji"></i><span>暂无绑定手机号</span></p>
           </div>
           <div class="goto_login">
@@ -58,12 +60,33 @@
         </li>
       </ul>
     </div>
+    <section class="user_info_logout border_px">
+      <button class="logout_btn" v-if="userInfo._id" @click="logout">退出登陆</button>
+    </section>
   </section>
 </template>
 <script>
+  import {mapState} from 'vuex'
+  import { MessageBox, Toast } from 'mint-ui'
   export default {
     data() {
       return {}
+    },
+    computed: {
+      ...mapState(['userInfo'])
+    },
+    methods: {
+      logout() {
+        MessageBox.confirm('确认退出吗？')
+          .then(action=>{
+            //发送请求退出
+            this.$store.dispatch('logout')
+            Toast('登出成功')
+          })
+          .catch(action=>{
+            console.log('取消登录')
+          })
+      }
     }
   }
 </script>
@@ -189,4 +212,19 @@
 
       .margin_fuwu
         margin-top 10px
+    .user_info_logout
+      top_border_px(#ddd)
+      margin-top 10px
+      background #fff
+      width 100%
+      height 40px
+      .logout_btn
+        width 100%
+        height 100%
+        border 0
+        background #ef4f4f
+        border-radius 5px
+        color #fff
+        font-size 18px
+        line-height 40px
 </style>

@@ -1,339 +1,63 @@
 <template>
   <div class="shop_container">
-    <ul class="shop_list">
-      <li class="shop_li">
+    <ul class="shop_list" v-if="shops.length>0">
+      <li class="shop_li" v-for="(shop,index) in shops" :key="index">
         <a href="javascript:;">
           <div class="shop_left">
-            <img src="./images/shop/1.jpg" alt="shop_img" class="shop_img">
+            <img :src="baseImgUrl+shop.image_path" alt="shop_img" class="shop_img">
           </div>
           <div class="shop_right">
             <div class="shop_right_top">
-              <h4 class="shop_title ellipsis">肯德基肯德基肯德基肯德基肯德基肯德基肯德基肯德基</h4>
+              <h4 class="shop_title ellipsis">{{shop.name}}</h4>
               <ul class="shop_detail_ul">
-                <li>保</li>
-                <li>准</li>
-                <li>票</li>
+                <li v-for="(support,index) in shop.supports">{{support.icon_name}}</li>
               </ul>
             </div>
             <div class="shop_right_middle">
               <div class="shop_order_left">
-                <div class="start">
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                </div>
-                <div class="rating">4.1</div>
-                <div class="sale">月售100单</div>
+                <Star :rating="shop.rating" :size="24"/>
+                <div class="rating">{{shop.rating}}</div>
+                <div class="sale">月售{{shop.recent_order_num}}单</div>
               </div>
               <div class="shop_order_right">
-                <span class="delivery_style delivery_left">硅谷专送</span>
+                <span class="delivery_style delivery_left">{{shop.delivery_mode.text}}</span>
                 <span class="delivery_style delivery_right">准时达</span>
               </div>
             </div>
             <div class="shop_right_bottom">
               <p class="shop_delivery_msg">
-                <span>￥20元起送</span>
+                <span>￥{{shop.float_minimum_order_amount}}元起送</span>
                 <span class="segmentation"> / </span>
-                <span>配送费5元</span>
-              </p>
-            </div>
-          </div>
-        </a>
-      </li>
-      <li class="shop_li">
-        <a href="javascript:;">
-          <div class="shop_left">
-            <img src="./images/shop/2.jpg" alt="shop_img" class="shop_img">
-          </div>
-          <div class="shop_right">
-            <div class="shop_right_top">
-              <h4 class="shop_title ellipsis">肯德基肯德基肯德基肯德基肯德基肯德基肯德基肯德基</h4>
-              <ul class="shop_detail_ul">
-                <li>保</li>
-                <li>准</li>
-                <li>票</li>
-              </ul>
-            </div>
-            <div class="shop_right_middle">
-              <div class="shop_order_left">
-                <div class="start">
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                </div>
-                <div class="rating">3.5</div>
-                <div class="sale">月售100单</div>
-              </div>
-              <div class="shop_order_right">
-                <span class="delivery_style delivery_left">硅谷专送</span>
-                <span class="delivery_style delivery_right">准时达</span>
-              </div>
-            </div>
-            <div class="shop_right_bottom">
-              <p class="shop_delivery_msg">
-                <span>￥20元起送</span>
-                <span class="segmentation"> / </span>
-                <span>配送费5元</span>
-              </p>
-            </div>
-          </div>
-        </a>
-      </li>
-      <li class="shop_li">
-        <a href="javascript:;">
-          <div class="shop_left">
-            <img src="./images/shop/3.jpg" alt="shop_img" class="shop_img">
-          </div>
-          <div class="shop_right">
-            <div class="shop_right_top">
-              <h4 class="shop_title ellipsis">肯德基肯德基肯德基肯德基肯德基肯德基肯德基肯德基</h4>
-              <ul class="shop_detail_ul">
-                <li>保</li>
-                <li>准</li>
-                <li>票</li>
-              </ul>
-            </div>
-            <div class="shop_right_middle">
-              <div class="shop_order_left">
-                <div class="start">
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                </div>
-                <div class="rating">4.8</div>
-                <div class="sale">月售100单</div>
-              </div>
-              <div class="shop_order_right">
-                <span class="delivery_style delivery_left">硅谷专送</span>
-                <span class="delivery_style delivery_right">准时达</span>
-              </div>
-            </div>
-            <div class="shop_right_bottom">
-              <p class="shop_delivery_msg">
-                <span>￥20元起送</span>
-                <span class="segmentation"> / </span>
-                <span>配送费5元</span>
-              </p>
-            </div>
-          </div>
-        </a>
-      </li>
-      <li class="shop_li">
-        <a href="javascript:;">
-          <div class="shop_left">
-            <img src="./images/shop/4.jpg" alt="shop_img" class="shop_img">
-          </div>
-          <div class="shop_right">
-            <div class="shop_right_top">
-              <h4 class="shop_title ellipsis">肯德基肯德基肯德基肯德基肯德基肯德基肯德基肯德基</h4>
-              <ul class="shop_detail_ul">
-                <li>保</li>
-                <li>准</li>
-                <li>票</li>
-              </ul>
-            </div>
-            <div class="shop_right_middle">
-              <div class="shop_order_left">
-                <div class="start">
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                </div>
-                <div class="rating">4.0</div>
-                <div class="sale">月售100单</div>
-              </div>
-              <div class="shop_order_right">
-                <span class="delivery_style delivery_left">硅谷专送</span>
-                <span class="delivery_style delivery_right">准时达</span>
-              </div>
-            </div>
-            <div class="shop_right_bottom">
-              <p class="shop_delivery_msg">
-                <span>￥20元起送</span>
-                <span class="segmentation"> / </span>
-                <span>配送费5元</span>
-              </p>
-            </div>
-          </div>
-        </a>
-      </li>
-      <li class="shop_li">
-        <a href="javascript:;">
-          <div class="shop_left">
-            <img src="./images/shop/1.jpg" alt="shop_img" class="shop_img">
-          </div>
-          <div class="shop_right">
-            <div class="shop_right_top">
-              <h4 class="shop_title ellipsis">肯德基肯德基肯德基肯德基肯德基肯德基肯德基肯德基</h4>
-              <ul class="shop_detail_ul">
-                <li>保</li>
-                <li>准</li>
-                <li>票</li>
-              </ul>
-            </div>
-            <div class="shop_right_middle">
-              <div class="shop_order_left">
-                <div class="start">
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                </div>
-                <div class="rating">5</div>
-                <div class="sale">月售100单</div>
-              </div>
-              <div class="shop_order_right">
-                <span class="delivery_style delivery_left">硅谷专送</span>
-                <span class="delivery_style delivery_right">准时达</span>
-              </div>
-            </div>
-            <div class="shop_right_bottom">
-              <p class="shop_delivery_msg">
-                <span>￥20元起送</span>
-                <span class="segmentation"> / </span>
-                <span>配送费5元</span>
-              </p>
-            </div>
-          </div>
-        </a>
-      </li>
-      <li class="shop_li">
-        <a href="javascript:;">
-          <div class="shop_left">
-            <img src="./images/shop/2.jpg" alt="shop_img" class="shop_img">
-          </div>
-          <div class="shop_right">
-            <div class="shop_right_top">
-              <h4 class="shop_title ellipsis">肯德基肯德基肯德基肯德基肯德基肯德基肯德基肯德基</h4>
-              <ul class="shop_detail_ul">
-                <li>保</li>
-                <li>准</li>
-                <li>票</li>
-              </ul>
-            </div>
-            <div class="shop_right_middle">
-              <div class="shop_order_left">
-                <div class="start">
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                </div>
-                <div class="rating">3.5</div>
-                <div class="sale">月售100单</div>
-              </div>
-              <div class="shop_order_right">
-                <span class="delivery_style delivery_left">硅谷专送</span>
-                <span class="delivery_style delivery_right">准时达</span>
-              </div>
-            </div>
-            <div class="shop_right_bottom">
-              <p class="shop_delivery_msg">
-                <span>￥20元起送</span>
-                <span class="segmentation"> / </span>
-                <span>配送费5元</span>
-              </p>
-            </div>
-          </div>
-        </a>
-      </li>
-      <li class="shop_li">
-        <a href="javascript:;">
-          <div class="shop_left">
-            <img src="./images/shop/3.jpg" alt="shop_img" class="shop_img">
-          </div>
-          <div class="shop_right">
-            <div class="shop_right_top">
-              <h4 class="shop_title ellipsis">肯德基肯德基肯德基肯德基肯德基肯德基肯德基肯德基</h4>
-              <ul class="shop_detail_ul">
-                <li>保</li>
-                <li>准</li>
-                <li>票</li>
-              </ul>
-            </div>
-            <div class="shop_right_middle">
-              <div class="shop_order_left">
-                <div class="start">
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                </div>
-                <div class="rating">4.8</div>
-                <div class="sale">月售100单</div>
-              </div>
-              <div class="shop_order_right">
-                <span class="delivery_style delivery_left">硅谷专送</span>
-                <span class="delivery_style delivery_right">准时达</span>
-              </div>
-            </div>
-            <div class="shop_right_bottom">
-              <p class="shop_delivery_msg">
-                <span>￥20元起送</span>
-                <span class="segmentation"> / </span>
-                <span>配送费5元</span>
-              </p>
-            </div>
-          </div>
-        </a>
-      </li>
-      <li class="shop_li">
-        <a href="javascript:;">
-          <div class="shop_left">
-            <img src="./images/shop/4.jpg" alt="shop_img" class="shop_img">
-          </div>
-          <div class="shop_right">
-            <div class="shop_right_top">
-              <h4 class="shop_title ellipsis">肯德基肯德基肯德基肯德基肯德基肯德基肯德基肯德基</h4>
-              <ul class="shop_detail_ul">
-                <li>保</li>
-                <li>准</li>
-                <li>票</li>
-              </ul>
-            </div>
-            <div class="shop_right_middle">
-              <div class="shop_order_left">
-                <div class="start">
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                  <span class="start-item"></span>
-                </div>
-                <div class="rating">4.0</div>
-                <div class="sale">月售100单</div>
-              </div>
-              <div class="shop_order_right">
-                <span class="delivery_style delivery_left">硅谷专送</span>
-                <span class="delivery_style delivery_right">准时达</span>
-              </div>
-            </div>
-            <div class="shop_right_bottom">
-              <p class="shop_delivery_msg">
-                <span>￥20元起送</span>
-                <span class="segmentation"> / </span>
-                <span>配送费5元</span>
+                <span>配送费{{shop.float_delivery_fee}}元</span>
               </p>
             </div>
           </div>
         </a>
       </li>
     </ul>
+    <ul v-else>
+      <li v-for="i in 10" :key="i">
+        <img src="./images/shop_back.svg" alt="shop_back">
+      </li>
+    </ul>
   </div>
 </template>
 <script>
-
+  import {mapState} from 'vuex'
+  import Star from '../Star/Star.vue'
+  export default {
+    data () {
+      return {
+        baseImgUrl: 'https://fuss10.elemecdn.com'
+      }
+    },
+    computed: {
+      ...mapState(['shops'])
+    },
+    components: {
+      Star
+    }
+  }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
   $topicC = #02a774 //主题颜色
@@ -411,19 +135,6 @@
                 float left
                 >div
                   float left
-                .start
-                  >span
-                    float left
-                    width 10px
-                    height 10px
-                    background-repeat: no-repeat;
-                    background-size: 10px 10px
-                    &.on
-                      bg_image('star24_on')
-                    &.half
-                      bg_image('star24_half')
-                    &.off
-                      bg_image('star24_off')
                 .rating
                   font-size 10px
                   color #ff6000

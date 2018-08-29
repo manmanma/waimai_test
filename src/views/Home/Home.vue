@@ -13,113 +13,22 @@
     <Main class="home_main">
       <div class="home_container">
         <!--轮播图-->
-        <div class="swiper-container">
-          <div class="swiper-wrapper">
-            <ul class="swiper-slide">
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/1.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/2.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/3.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/4.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/5.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/6.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/7.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/8.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-
-            </ul>
-            <ul class="swiper-slide">
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/1.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/2.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/3.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/4.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/5.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/6.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/7.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-              <li>
-                <a href="javascript:;">
-                  <img src="./images/nav/8.jpg" alt="">
-                  <span>甜品饮料</span>
-                </a>
-              </li>
-
-            </ul>
+        <div>
+          <div class="swiper-container" v-if="categorys.length>0">
+            <div class="swiper-wrapper">
+              <ul class="swiper-slide" v-for="(categorys,index) in categorysArr" :key="index">
+                <li v-for="(category,index) in categorys" :key="category.id">
+                  <a href="javascript:;">
+                    <img :src="imgBaseUrl+category.image_url" alt="">
+                    <span>{{category.title}}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <!-- Add Pagination -->
+            <div class="swiper-pagination"></div>
           </div>
-          <!-- Add Pagination -->
-          <div class="swiper-pagination"></div>
+          <img src="./images/msite_back.svg" alt="swiper_back" v-else>
         </div>
         <!--商家列表-->
         <div class="home_shop border_px">
@@ -141,20 +50,52 @@
   import ShopList from '../../components/ShopList/ShopList.vue'
   import {mapState} from 'vuex'
   export default {
+    data() {
+      return {
+        imgBaseUrl: 'https://fuss10.elemecdn.com'
+      }
+    },
     async mounted () {
-      new Swiper ('.swiper-container', {
-        loop: true,
-        // 如果需要分页器
-        pagination: {
-          el: '.swiper-pagination',
-        },
-      })
+      //获取商家分类列表
+      this.$store.dispatch('getCategorys')
+      //获取商家列表
+      this.$store.dispatch('getShops')
     },
     components: {
       ShopList
     },
     computed: {
-      ...mapState(['address'])
+      ...mapState(['address','categorys']),
+      categorysArr () {
+        const max = 8
+        const {categorys} = this
+        const arr = []
+        let smallArr = []
+        categorys.forEach((category,index) => {
+          if(smallArr.length===0) {
+            arr.push(smallArr)
+          }
+          smallArr.push(category)
+          if(smallArr.length === max) {
+            smallArr = []
+          }
+        })
+        return arr
+      }
+    },
+    watch: {
+      categorys (value) {
+        //监视category更新完成后调用$nextTick 回调函数中使用轮播
+        this.$nextTick( () => {
+          new Swiper ('.swiper-container', {
+            loop: true,
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination',
+            },
+          })
+        })
+      }
     }
   }
 </script>

@@ -23,6 +23,6 @@ clearFix()
   display block
   clear both
 bg_image($star)
-  background-image: url('./images/stars/' + $star +'@2x.png')
+  background-image: url( $star +'@2x.png')
   @media only screen and (-webkit-device-pixel-ratio:3)
-    background-image: url('./images/stars/' + $star + '@3x.png')
+    background-image: url($star + '@3x.png')
