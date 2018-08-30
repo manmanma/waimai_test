@@ -11,7 +11,7 @@
         <div :class="{on: loginWay}">
           <section class="login_msg_mobile">
             <input type="text"  placeholder="手机号" maxlength="11" v-model="phone">
-            <button :disabled="!isRightPhone || computeTime > 0" class="get_code" :class="{on: isRightPhone}" @click.prevent="getCode">
+            <button :disabled="!isRightPhone || computeTime > 0" class="get_code" :class="{on: isRightPhone && computeTime ===0}" @click.prevent="getCode">
               {{computeTime > 0  ? `已发送(${computeTime}s)` : '获取验证码'}}
             </button>
           </section>
