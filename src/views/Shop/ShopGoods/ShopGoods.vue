@@ -1,9 +1,10 @@
 <template>
   <div class="goods">
       <div class="menu-wrapper">
-        <ul v-if="goods">
-          <li class="menu-item" :class="{current: currentIndex === index}" v-for="(good, index) in goods" :key="index" >
-            <span class="text bottom-border-1px">
+        <ul ref="menuUl">
+          <li class="menu-item" :class="{current: currentIndex === index}"
+              v-for="(good, index) in goods" :key="index" @click="selectItem(index)" >
+            <span class="text bottom_border_1px">
               <img class="icon" :src="good.icon" v-if="good.icon">
               {{good.name}}
             </span>
@@ -11,11 +12,11 @@
         </ul>
       </div>
       <div class="foods-wrapper">
-        <ul>
+        <ul ref="foodsUl">
           <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom-border-1px" v-for="(food, index) in good.foods" :key="index">
+              <li class="food-item bottom_border_1px" v-for="(food, index) in good.foods" :key="index">
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -42,22 +43,96 @@
 <script>
   import Scroll from 'better-scroll'
   import {mapState} from 'vuex'
+  /*
+  * 功能：
+  *   1.点击左侧列表，右侧列表滑动到对应位置
+  *   2.滑动右侧列表，左侧列表滑动到对应位置
+  *   3.右侧滑动，左侧对应位置是否当前可见
+  *     当前分类的下标 currentIndex
+  *     scrollY 右侧列表滑动的Y坐标 滑动过程中动态确定 绑定scroll监听
+  *     tops 右侧所有li的top值，列表初始化显示后读取
+  *     计算属性  scrollY的区间 scrollY >= top && scrollY < nextTop(tops[index+1])
+  * */
   export default {
     mounted () {
-      this.$store.dispatch('getShopGoods', ()=>{
-        new Scroll('.foods-wrapper')
-        new Scroll('.menu-wrapper')
+      this.$store.dispatch('getShopGoods', ()=> {
+        this.$nextTick(()=> {
+          this._initScroll()
+          this._initTops()
+        })
       })
     },
-    data() {
+    data () {
       return {
-        tops: [],//右侧滑动所有的li的top值
+        scrollY: 0,//右侧滑动距离
+        tops: [],//右侧所有li的top值
       }
     },
     computed: {
       ...mapState(['goods']),
       currentIndex () {
+        const {scrollY, tops} =  this
+        const index = tops.findIndex((top, index) => scrollY>=top && scrollY<tops[index+1])
+        //当index值有变化再滑动
+        if(index!==Scroll.index){
+          Scroll.index = index
+          //左侧滑动到指定li的位置
+          this._scrollLeftList(index)
+        }
 
+        return index
+      }
+    },
+    methods: {
+      //定义滑动对象
+      _initScroll () {
+        //左侧滑动
+        this.leftScroll = new Scroll('.menu-wrapper', {
+          click: true
+        })
+        //右侧滑动
+        this.rightScroll = new Scroll('.foods-wrapper', {
+          probeType: 1,//触摸滑动时非实时触发scroll
+          click: true//分发点击自定义事件
+        })
+        //右侧列表绑定监听 右侧列表滑动，左侧列表分类随位置变化
+        this.rightScroll.on('scroll', ({x,y})=> {
+          this.scrollY = Math.abs(y)
+        })
+        this.rightScroll.on('scrollEnd', ({x, y})=>{//最后滑动的位置
+          this.scrollY = Math.abs(y)
+        })
+      },
+      //初始化列表显示后获取所有li的top值
+      _initTops () {
+        const tops = []
+        let top = 0
+        tops.push(top)
+        //循环遍历所有的li计算top值将值添加到数组中
+        const lis = this.$refs.foodsUl.getElementsByClassName('food-list-hook')
+        Array.from(lis).forEach((li, index)=> {
+          top += li.clientHeight
+          tops.push(top)
+        })
+        //更新tops状态
+        this.tops = tops
+      },
+      //点击左侧分类右侧列表相应变化
+      selectItem (index) {
+        //得到目标位置的top值
+        const top = this.tops[index]
+        //更新滑动的值
+        this.scrollY = top
+        //右侧列表平滑滚动到对应的位置
+        this.rightScroll.scrollTo(0, -top, 300)
+      },
+      //左侧列表滑动到可见区域
+      _scrollLeftList(index) {
+        if(this.leftScroll){
+          const li = this.$refs.menuUl.children[index]
+          //滑动到li区域
+          this.leftScroll.scrollToElement(li, 300)
+        }
       }
     }
   }
@@ -87,7 +162,7 @@
           z-index: 10
           margin-top: -1px
           background: #fff
-          color: $green
+          color: #02a774
           font-weight: 700
           .text
             border-none()

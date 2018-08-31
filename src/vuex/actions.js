@@ -67,17 +67,19 @@ export default {
     }
   },
   //获取商家评价
-  async getShopRatings ({commit}) {
+  async getShopRatings ({commit}, callBack) {
     const result =await reqShopRatings()
     if(result.code===0){
       commit(RECEIVE_RATINGS, {ratings: result.data})
+      callBack && callBack()
     }
   },
   //获取商家信息
-  async getShopInfo ({commit}) {
+  async getShopInfo ({commit}, callBack) {
     const result =await reqShopInfo()
     if(result.code===0){
       commit(RECEIVE_INFO, {info: result.data})
+      callBack && callBack()
     }
   }
 }

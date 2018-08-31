@@ -62,6 +62,7 @@
   </div>
 </template>
 <script>
+  import Scroll from 'better-scroll'
   import {mapState} from 'vuex'
   export default {
     data () {
@@ -71,7 +72,15 @@
     },
     computed: {
       ...mapState(['info'])
-    }
+    },
+    watch:{
+      info(val){
+        this.$nextTick(()=>{
+          new Scroll('.shop-info')
+        })
+      }
+
+    },
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">

@@ -30,21 +30,21 @@
 
       <div class="rating-wrapper">
         <ul>
-          <li class="rating-item">
+          <li class="rating-item" v-for="(rating, index) in ratings" :key="index">
             <div class="avatar">
-              <img width="28" height="28" src="http://static.galileo.xiaojukeji.com/static/tms/default_header.png">
+              <img width="28" height="28" :src="rating.avatar">
             </div>
             <div class="content">
-              <h1 class="name">xxx</h1>
+              <h1 class="name">{{rating.username}}</h1>
               <div class="star-wrapper">
                 <div>Star组件</div>
-                <span class="delivery">30</span>
+                <span class="delivery">{{rating.deliveryTime}}</span>
               </div>
-              <p class="text">还可以</p>
+              <p class="text">{{rating.text}}</p>
               <div class="recommend">
                 <span class="iconfont icon-thumb_up"></span>
               </div>
-              <div class="time">2016-12-11 12:02:13</div>
+              <div class="time">{{rating.rateTime}}</div>
             </div>
           </li>
         </ul>
@@ -53,17 +53,23 @@
   </div>
 </template>
 <script>
+  import Scroll from 'better-scroll'
   import {mapState} from 'vuex'
   export default {
     mounted () {
-      this.$store.dispatch('getShopRatings')
+      this.$store.dispatch('getShopRatings', ()=> {
+        this.$nextTick(()=>{
+          new Scroll('.ratings')
+        })
+      })
     },
     data() {
       return {}
     },
     computed: {
       ...mapState(['info','ratings'])
-    }
+    },
+
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
