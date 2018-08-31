@@ -18,6 +18,18 @@ top_border_px($color)
     width 100%
     height 1px
     background-color $color
+bottom_border_1px($color)
+  position relative
+  border none
+  &:after
+    content ''
+    position absolute
+    left 0
+    bottom 0
+    width 100%
+    height 1px
+    background-color $color
+    transform scaleY(0.5)
 clearFix()
   content ''
   display block

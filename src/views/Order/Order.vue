@@ -5,7 +5,7 @@
     <div class="order_no_login">
       <img src="./images/person.png" alt="order_img">
       <h3>登录后查看外卖订单</h3>
-      <button class="btn_login">立即登录</button>
+      <router-link to="/login" class="btn_login">立即登录</router-link>
     </div>
   </section>
 </template>
@@ -34,7 +34,7 @@
         color #6a6a6a
         font-size 17px
         padding 10px 0
-      button
+      .btn_login
         display inline-block
         font-size 14px
         color #fff

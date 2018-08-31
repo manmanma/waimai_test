@@ -11,7 +11,7 @@
             <p v-if="!userInfo.phone"><a href="javascript:;">
               {{userInfo.name || '登录/注册'}}
             </a></p>
-            <p><i class="iconfont icon-shouji"></i><span>暂无绑定手机号</span></p>
+            <p><i class="iconfont icon-shouji"></i><span>{{ userInfo.phone || '暂无绑定手机号'}}</span></p>
           </div>
           <div class="goto_login">
             <i class="iconfont icon-jiantou1"></i>
@@ -60,8 +60,11 @@
         </li>
       </ul>
     </div>
-    <section class="user_info_logout border_px">
+    <!--<section class="user_info_logout border_px">
       <button class="logout_btn" v-if="userInfo._id" @click="logout">退出登陆</button>
+    </section>-->
+    <section class="user_info_logout border_px">
+      <mt-button type="danger" v-if="userInfo._id" @click="logout">退出登陆</mt-button>
     </section>
   </section>
 </template>
@@ -78,14 +81,16 @@
     methods: {
       logout() {
         MessageBox.confirm('确认退出吗？')
-          .then(action=>{
-            //发送请求退出
-            this.$store.dispatch('logout')
-            Toast('登出成功')
-          })
-          .catch(action=>{
-            console.log('取消登录')
-          })
+          .then(
+            action=>{
+              //发送请求退出
+              this.$store.dispatch('logout')
+              Toast('登出成功')
+            },
+            action=>{
+              console.log('取消登录')
+            }
+          )
       }
     }
   }
@@ -218,6 +223,8 @@
       background #fff
       width 100%
       height 40px
+      .mint-button
+        width 100%
       .logout_btn
         width 100%
         height 100%

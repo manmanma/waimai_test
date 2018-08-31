@@ -3,10 +3,12 @@
     <!--头部导航-->
     <HeaderTop :title="address.name">
       <span class="header_search" slot="left">
-        <i class="iconfont icon-sousuo"></i>
+        <router-link to="/search">
+          <i class="iconfont icon-sousuo"></i>
+        </router-link>
       </span>
       <span class="header_login" slot="right">
-        <span class="header_login_text">登录|注册</span>
+        <router-link to="/login" class="header_login_text">登录|注册</router-link>
       </span>
     </HeaderTop>
     <!--主题内容-->

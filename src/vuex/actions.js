@@ -3,7 +3,10 @@ import {
   RECEIVE_CATEGORYS,
   RECEIVE_SHOPS,
   RECEIVE_USER_INFO,
-  RESET_USER_INFO
+  RESET_USER_INFO,
+  RECEIVE_GOODS,
+  RECEIVE_RATINGS,
+  RECEIVE_INFO
 } from './mutation-types'
 import {
   reqAddress,
@@ -11,6 +14,9 @@ import {
   reqShops,
   reqUserInfo,
   reqLogout,
+  reqShopGoods,
+  reqShopRatings,
+  reqShopInfo
 } from '../api'
 export default {
   async getAddress ({commit,state}){
@@ -33,7 +39,7 @@ export default {
     //将结果发送到mutation
     commit(RECEIVE_SHOPS, {shops: result.data})
   },
-  //记录用户信息
+  //保存用户信息
   recordUserInfo({commit},userInfo){
     commit(RECEIVE_USER_INFO,{userInfo})
   },
@@ -50,6 +56,28 @@ export default {
     const result = await reqLogout()
     if(result.code===0){
       commit(RESET_USER_INFO)
+    }
+  },
+  //获取商家商品信息
+  async getShopGoods ({commit}, callBack){
+    const result = await reqShopGoods()
+    if(result.code===0){
+      commit(RECEIVE_GOODS, {goods: result.data})
+      callBack && callBack()
+    }
+  },
+  //获取商家评价
+  async getShopRatings ({commit}) {
+    const result =await reqShopRatings()
+    if(result.code===0){
+      commit(RECEIVE_RATINGS, {ratings: result.data})
+    }
+  },
+  //获取商家信息
+  async getShopInfo ({commit}) {
+    const result =await reqShopInfo()
+    if(result.code===0){
+      commit(RECEIVE_INFO, {info: result.data})
     }
   }
 }
