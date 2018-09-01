@@ -6,7 +6,10 @@ import {
   RESET_USER_INFO,
   RECEIVE_GOODS,
   RECEIVE_RATINGS,
-  RECEIVE_INFO
+  RECEIVE_INFO,
+  INCREMENT_FOOD_COUNT,
+  DECREMENT_FOOD_COUNT,
+  CLEAR_CART
 } from './mutation-types'
 import {
   reqAddress,
@@ -19,6 +22,7 @@ import {
   reqShopInfo
 } from '../api'
 export default {
+  //获取当前地址
   async getAddress ({commit,state}){
     //发送ajax请求
     const geohash = state.latitude + ',' + state.longitude
@@ -26,18 +30,21 @@ export default {
     //将结果发送到mutation
     commit(RECEIVE_ADDRESS, {address: result.data})
   },
+  //获取商品分类信息
   async getCategorys ({commit}){
     //发送ajax请求
     const result = await reqCategorys()
     //将结果发送到mutation
     commit(RECEIVE_CATEGORYS, {categorys: result.data})
   },
-  async getShops ({commit, state}){
+  //获取商家列表信息
+  async getShops ({commit, state}, callBack){
     //发送ajax请求
     const {latitude, longitude} = state
     const result = await reqShops({latitude, longitude})
     //将结果发送到mutation
     commit(RECEIVE_SHOPS, {shops: result.data})
+    callBack && callBack()
   },
   //保存用户信息
   recordUserInfo({commit},userInfo){
@@ -81,5 +88,18 @@ export default {
       commit(RECEIVE_INFO, {info: result.data})
       callBack && callBack()
     }
+  },
+  //修改food的数量
+  updateFoodCount ({commit},{food,isAdd}) {
+    if(isAdd){
+      commit(INCREMENT_FOOD_COUNT,{food})
+    }else{
+      commit(DECREMENT_FOOD_COUNT,{food})
+    }
+  },
+  // 清空购物车
+  clearCart ({commit}) {
+    commit(CLEAR_CART)
   }
+
 }

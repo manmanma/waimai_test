@@ -28,7 +28,7 @@
       <section class="section">
         <h3 class="section-title">商家实景</h3>
         <div class="pic-wrapper" v-if="info.pics">
-          <ul class="pic-list">
+          <ul class="pic-list" ref="picsUl">
             <li class="pic-item" v-for="(i) in info.pics" :key="i">
               <img width="120" height="90" :src="i">
             </li>
@@ -73,10 +73,35 @@
     computed: {
       ...mapState(['info'])
     },
+    mounted() {
+      // 如果数据还没有, 直接结束
+      if(!this.info.pics){
+        console.log('没图片了')
+        return
+      }
+      //有数据，创建Scroll对象，形成滑动
+      this._initScroll()
+    },
+    methods: {
+      _initScroll(){
+        //整个页面滑动
+        new Scroll('.shop-info')
+        //动态计算ul的宽度
+        const picsUl = this.$refs.picsUl
+        const liWidth = 120 //li的宽度
+        const marginRight =6//右边距
+        const count = this.info.pics.length
+        picsUl.style.width = (liWidth + marginRight ) * count -marginRight + 'px'
+        //商家实景图片滑动
+        new Scroll('.pic-wrapper', {
+          scrollX: true,//水平滑动
+        })
+      }
+    },
     watch:{
       info(val){
         this.$nextTick(()=>{
-          new Scroll('.shop-info')
+          this._initScroll()
         })
       }
 

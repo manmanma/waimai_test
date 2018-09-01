@@ -10,12 +10,12 @@
         <div class="overview-right">
           <div class="score-wrapper">
             <span class="title">服务态度</span>
-            <div>Star组件</div>
+            <Star :rating="info.serviceScore" :size="36"/>
             <span class="score">{{info.serviceScore}}</span>
           </div>
           <div class="score-wrapper">
             <span class="title">商品评分</span>
-            <div>Star组件</div>
+            <Star :rating="info.foodScore" :size="36"/>
             <span class="score">{{info.foodScore}}</span></div>
           <div class="delivery-wrapper">
             <span class="title">送达时间</span>
@@ -26,7 +26,9 @@
 
       <div class="split"></div>
 
-      <div>RatingSelect组件</div>
+      <div>
+        <RatingSelect/>
+      </div>
 
       <div class="rating-wrapper">
         <ul>
@@ -54,6 +56,8 @@
 </template>
 <script>
   import Scroll from 'better-scroll'
+  import RatingSelect from '../../../components/RatingSelect/RatingSelect.vue'
+  import Star from '../../../components/Star/Star.vue'
   import {mapState} from 'vuex'
   export default {
     mounted () {
@@ -69,6 +73,10 @@
     computed: {
       ...mapState(['info','ratings'])
     },
+    components: {
+      RatingSelect,
+      Star
+    }
 
   }
 </script>

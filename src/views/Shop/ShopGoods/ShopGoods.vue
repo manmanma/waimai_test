@@ -1,5 +1,6 @@
 <template>
-  <div class="goods">
+  <div>
+    <div class="goods">
       <div class="menu-wrapper">
         <ul ref="menuUl">
           <li class="menu-item" :class="{current: currentIndex === index}"
@@ -16,7 +17,9 @@
           <li class="food-list-hook" v-for="(good, index) in goods" :key="index">
             <h1 class="title">{{good.name}}</h1>
             <ul>
-              <li class="food-item bottom_border_1px" v-for="(food, index) in good.foods" :key="index">
+              <li class="food-item bottom_border_1px"
+                  v-for="(food, index) in good.foods"
+                  :key="index" @click="showFood(food)">
                 <div class="icon">
                   <img width="57" height="57" :src="food.icon">
                 </div>
@@ -30,7 +33,7 @@
                     <span class="now">￥{{food.price}}</span>
                   </div>
                   <div class="cartcontrol-wrapper">
-                    CartControl组件
+                    <CartControl :food="food"/>
                   </div>
                 </div>
               </li>
@@ -38,11 +41,17 @@
           </li>
         </ul>
       </div>
+      <ShopCart/>
     </div>
+    <Food :food="food" ref="food"/>
+  </div>
 </template>
 <script>
   import Scroll from 'better-scroll'
   import {mapState} from 'vuex'
+  import CartControl from '../../../components/CartControl/CartControl.vue'
+  import ShopCart from '../../../components/ShopCart/ShopCart.vue'
+  import Food from '../../../components/Food/Food.vue'
   /*
   * 功能：
   *   1.点击左侧列表，右侧列表滑动到对应位置
@@ -65,7 +74,8 @@
     data () {
       return {
         scrollY: 0,//右侧滑动距离
-        tops: [],//右侧所有li的top值
+        tops: [],//右侧所有li的top值,
+        food: {}
       }
     },
     computed: {
@@ -79,7 +89,6 @@
           //左侧滑动到指定li的位置
           this._scrollLeftList(index)
         }
-
         return index
       }
     },
@@ -133,7 +142,18 @@
           //滑动到li区域
           this.leftScroll.scrollToElement(li, 300)
         }
+      },
+      //是否显示食物详情
+      showFood (food){
+        this.food = food
+        //父组件调用子组件的方法 是否显示Food
+        this.$refs.food.toggleShow()
       }
+    },
+    components: {
+      CartControl,
+      ShopCart,
+      Food
     }
   }
 </script>

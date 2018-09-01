@@ -8,4 +8,5 @@ export default {
   goods: [],//商家商品信息
   ratings: [],//商家评论信息
   info: {},//商家信息
+  shopCart: [],//购物车
 }
