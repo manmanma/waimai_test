@@ -9,7 +9,7 @@
             </div>
             <div class="num"  v-if="cartFoodCount">{{cartFoodCount}}</div>
           </div>
-          <div class="price highlight">￥{{cartFoodPrice}}</div>
+          <div class="price" :class="{highlight: cartFoodPrice>0}">￥{{cartFoodPrice}}</div>
           <div class="desc">另需配送费￥{{info.deliveryPrice}}元</div>
         </div>
         <div class="content-right">
@@ -18,7 +18,8 @@
           </div>
         </div>
       </div>
-      <div class="shopcart-list" v-show="showList">
+      <transition name="move">
+        <div class="shopcart-list" v-show="showList">
         <div class="list-header">
           <h1 class="title">购物车</h1>
           <span class="empty" @click="clearCart">清空</span>
@@ -35,12 +36,14 @@
           </ul>
         </div>
       </div>
+      </transition>
     </div>
     <div class="list-mask" v-show="showList" @click="toggleShowShop"></div>
   </div>
 </template>
 <script>
   import Scroll from 'better-scroll'
+  import {MessageBox} from 'mint-ui'
   import {mapState,mapGetters} from 'vuex'
   import CartControl from '../CartControl/CartControl.vue'
   export default {
@@ -101,7 +104,10 @@
       },
       //清空购物车
       clearCart () {
-        this.$store.dispatch('clearCart')
+        MessageBox.confirm('确定清空吗？').then(
+          action=> this.$store.dispatch('clearCart'),
+          action=> console.log('取消')
+        )
       }
     },
     components: {
@@ -204,6 +210,11 @@
       z-index: -1
       width: 100%
       transform translateY(-100%)
+      &.move-enter-active, &.move-leave-active
+        transition all .5s
+      &.move-enter, &.move-leave-to
+        transform translateY(0)
+        opacity 0
       .list-header
         height: 40px
         line-height: 40px

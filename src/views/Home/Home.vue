@@ -8,7 +8,8 @@
         </router-link>
       </span>
       <span class="header_login" slot="right">
-        <router-link to="/login" class="header_login_text">登录|注册</router-link>
+        <router-link to="/profile" v-if="userInfo._id" class="header_login_text"><i class="iconfont icon-geren"></i></router-link>
+        <router-link to="/login " v-else class="header_login_text">登录|注册</router-link>
       </span>
     </HeaderTop>
     <!--主题内容-->
@@ -67,7 +68,7 @@
       ShopList
     },
     computed: {
-      ...mapState(['address','categorys']),
+      ...mapState(['address','categorys','userInfo']),
       categorysArr () {
         const max = 8
         const {categorys} = this

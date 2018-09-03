@@ -1,26 +1,40 @@
 <template>
   <div class="ratingselect">
     <div class="rating-type border-1px">
-      <span class="block">
-        全部<span class="count">1</span>
+      <span class="block" :class="{active: selectRateType === 2}" @click="setRateType(2)">
+        全部<span class="count">{{ratingsTotalCount}}</span>
       </span>
-      <span class="block active">
-        推荐<span class="count">1</span>
+      <span class="block" :class="{active: selectRateType === 0}" @click="setRateType(0)">
+        推荐<span class="count">{{ratingsPositiveCount}}</span>
       </span>
-      <span class="block">
-        吐槽<span class="count">0</span>
+      <span class="block" :class="{active: selectRateType === 1}" @click="setRateType(1)">
+        吐槽<span class="count">{{ratingsTotalCount-ratingsPositiveCount}}</span>
       </span>
     </div>
-    <div class="switch on">
+    <div class="switch" :class="{on: onlyContent}" @click="switchOnlyContent">
       <span class="iconfont icon-check_circle"></span>
       <span class="text">只看有内容的评价</span>
     </div>
   </div>
 </template>
 <script>
+  import {mapGetters} from 'vuex'
   export default {
-    data() {
-      return {}
+    props: {
+      selectRateType: Number,
+      onlyContent: Boolean
+    },
+    computed: {
+      ...mapGetters(['ratingsTotalCount', 'ratingsPositiveCount'])
+    },
+    methods: {
+      setRateType(selectRateType) {
+        //分发自定义事件
+        this.$emit('setRateType',selectRateType)
+      },
+      switchOnlyContent() {
+        this.$emit('switchOnlyContent')
+      }
     }
   }
 </script>

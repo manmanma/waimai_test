@@ -27,26 +27,28 @@
       <div class="split"></div>
 
       <div>
-        <RatingSelect/>
+        <RatingFilter :selectRateType="selectRateType" :onlyContent="onlyContent"
+                      @setRateType="setRateType" @switchOnlyContent="switchOnlyContent"/>
       </div>
 
       <div class="rating-wrapper">
         <ul>
-          <li class="rating-item" v-for="(rating, index) in ratings" :key="index">
+          <li class="rating-item" v-for="(rating, index) in filterRatings" :key="index">
             <div class="avatar">
               <img width="28" height="28" :src="rating.avatar">
             </div>
             <div class="content">
               <h1 class="name">{{rating.username}}</h1>
               <div class="star-wrapper">
-                <div>Star组件</div>
+                <Star :rating="rating.score" :size="24"/>
                 <span class="delivery">{{rating.deliveryTime}}</span>
               </div>
               <p class="text">{{rating.text}}</p>
               <div class="recommend">
-                <span class="iconfont icon-thumb_up"></span>
+                <span class="iconfont" :class="rating.rateType===0? 'icon-thumb_up': 'icon-thumb_down' "></span>
+                <span class="item" v-for="(item, index) in rating.recommend" :key="index">{{item}}</span>
               </div>
-              <div class="time">{{rating.rateTime}}</div>
+              <div class="time">{{rating.rateTime | date-format}}</div>
             </div>
           </li>
         </ul>
@@ -56,7 +58,7 @@
 </template>
 <script>
   import Scroll from 'better-scroll'
-  import RatingSelect from '../../../components/RatingSelect/RatingSelect.vue'
+  import RatingFilter from '../../../components/RatingFilter/RatingFilter.vue'
   import Star from '../../../components/Star/Star.vue'
   import {mapState} from 'vuex'
   export default {
@@ -68,13 +70,31 @@
       })
     },
     data() {
-      return {}
+      return {
+        selectRateType: 2,//2全部 0 好评 1吐槽
+        onlyContent: false,//只显示文字
+      }
     },
     computed: {
-      ...mapState(['info','ratings'])
+      ...mapState(['info','ratings']),
+      filterRatings(){
+        const {ratings, selectRateType, onlyContent} = this
+        return ratings.filter( rating => {
+          const {rateType, text} =rating
+          return (selectRateType===2 || selectRateType === rateType) && (!onlyContent || text.length>0)
+        })
+      }
+    },
+    methods: {
+      setRateType (selectRateType) {
+        this.selectRateType = selectRateType
+      },
+      switchOnlyContent () {
+        this.onlyContent = !this.onlyContent
+      }
     },
     components: {
-      RatingSelect,
+      RatingFilter,
       Star
     }
 
